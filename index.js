@@ -44,6 +44,7 @@ const fetchDataByCategory = (id, sortByView) => {
   fetch(url)
     .then(res => res.json())
     .then(({ data }) => {
+      console.log(data);
       if (sortByView) {
         data.sort((a, b) => {
           const totalViewstringFirst = a.others?.views;
@@ -62,8 +63,21 @@ const fetchDataByCategory = (id, sortByView) => {
         errorElement.classList.add('hidden');
       }
       data.forEach(card => {
-        // console.log(card);
-        // console.log(data);
+        const convertSeconds = seconds => {
+          const hours = Math.floor(seconds / 3600);
+          const minutes = Math.floor((seconds % 3600) / 60);
+
+          if (hours > 0) {
+            return `${hours} hours : ${minutes} minutes`;
+          } else {
+            return `${minutes} minutes`;
+          }
+        };
+
+        // const result = convertSeconds(2200);
+        const result = convertSeconds(card.others.posted_date);
+        // console.log(result);
+
         let verifiedBadge = '';
         if (card.authors[0].verified) {
           verifiedBadge = `<img class="w-6 h-6" src="./verify.png" alt="">`;
@@ -72,7 +86,7 @@ const fetchDataByCategory = (id, sortByView) => {
         newCard.innerHTML = `<div class="card w-full bg-base-100 shadow-xl">
         <figure class="overflow-hidden h-72">
           <img class="w-full" src="${card.thumbnail}" alt="Shoes" />
-          <h6 class="absolute bottom-[40%] right-12">0 hr</h6>
+          <h6 class="absolute bottom-[40%] right-12 text-white font-bold">${result}</h6>
         </figure>
         <div class="card-body">
           <div class="flex space-x-4 justify-start items-start">
